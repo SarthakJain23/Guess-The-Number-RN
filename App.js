@@ -17,16 +17,17 @@ export default function App() {
 
   const pickedNumberHandler = (pickedNumber) => {
     setUserNumber(pickedNumber);
+    setGameIsOver(false);
   };
 
   const renderScreen = () => {
+    if (gameIsOver && userNumber) {
+      return <GameOverScreen />;
+    }
     if (userNumber) {
       return (
         <GameScreen userNumber={userNumber} onGameOver={gameOverHandler} />
       );
-    }
-    if (gameIsOver) {
-      return <GameOverScreen />;
     }
     return <GameStartScreen onPickNumber={pickedNumberHandler} />;
   };

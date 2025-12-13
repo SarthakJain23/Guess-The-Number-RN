@@ -18,12 +18,9 @@ let minBoundary = 1;
 let maxBoundary = 100;
 
 const GameScreen = ({ userNumber, onGameOver }) => {
-  const initialGuess = generateRandomBetween(
-    minBoundary,
-    maxBoundary,
-    userNumber
+  const [currentGuess, setCurrentGuess] = useState(
+    generateRandomBetween(minBoundary, maxBoundary, userNumber)
   );
-  const [currentGuess, setCurrentGuess] = useState(initialGuess);
 
   const nextGuessHandler = (increment) => {
     if (
@@ -40,11 +37,7 @@ const GameScreen = ({ userNumber, onGameOver }) => {
     } else {
       maxBoundary = currentGuess - 1;
     }
-    const newGuess = generateRandomBetween(
-      minBoundary,
-      maxBoundary,
-      userNumber
-    );
+    const newGuess = generateRandomBetween(minBoundary, maxBoundary);
     setCurrentGuess(newGuess);
     if (newGuess === userNumber) {
       onGameOver();
