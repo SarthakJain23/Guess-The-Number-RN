@@ -1,5 +1,7 @@
+import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-import { useState } from "react";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect, useState } from "react";
 import { ImageBackground, StyleSheet } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "./constants/colors";
@@ -10,6 +12,31 @@ import GameStartScreen from "./screens/GameStartScreen";
 export default function App() {
   const [userNumber, setUserNumber] = useState(null);
   const [gameIsOver, setGameIsOver] = useState(true);
+  const [appIsReady, setAppIsReady] = useState(false);
+  const [loaded] = useFonts({
+    "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
+    "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
+  });
+
+  useEffect(() => {
+    SplashScreen.preventAutoHideAsync();
+  }, []);
+
+  useEffect(() => {
+    if (loaded) {
+      setAppIsReady(true);
+    }
+  }, [loaded]);
+
+  useEffect(() => {
+    if (appIsReady) {
+      SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return null;
+  }
 
   const gameOverHandler = () => {
     setGameIsOver(true);

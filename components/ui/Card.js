@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
   },
   cardTitle: {
+    fontFamily: "open-sans",
     color: COLORS.accent500,
     fontSize: 24,
   },
