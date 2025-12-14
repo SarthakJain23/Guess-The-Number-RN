@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
 import NumberContainer from "../components/game/NumberContainer";
 import Card from "../components/ui/Card";
 import PrimaryButton from "../components/ui/PrimaryButton";
@@ -25,20 +25,21 @@ const GameScreen = ({ userNumber, onGameOver, setRoundsNumber }) => {
   );
   const [guessRounds, setGuessRounds] = useState([currentGuess]);
 
-  const validateGuess = (increment) => {
+  const isValid = (increment) => {
     if (
       (increment && currentGuess >= userNumber) ||
       (!increment && currentGuess <= userNumber)
     ) {
-      Alert.alert("Don't lie!", "You know that this is wrong...", [
-        { text: "Sorry!", style: "cancel" },
-      ]);
-      return;
+      return false;
     }
+    return true;
   };
 
   const nextGuessHandler = (increment) => {
-    if (validateGuess(increment)) {
+    if (!isValid(increment)) {
+      Alert.alert("Don't lie!", "You know that this is wrong...", [
+        { text: "Sorry!", style: "cancel" },
+      ]);
       return;
     }
     if (increment) {
@@ -49,7 +50,7 @@ const GameScreen = ({ userNumber, onGameOver, setRoundsNumber }) => {
     const newGuess = generateRandomBetween(minBoundary, maxBoundary);
     setRoundsNumber((prevRounds) => prevRounds + 1);
     setCurrentGuess(newGuess);
-    setGuessRounds((prevGuessRounds) => [...prevGuessRounds, newGuess]);
+    setGuessRounds((prevGuessRounds) => [newGuess, ...prevGuessRounds]);
     if (newGuess === userNumber) {
       onGameOver();
     }
@@ -74,9 +75,11 @@ const GameScreen = ({ userNumber, onGameOver, setRoundsNumber }) => {
         </View>
       </Card>
       <View>
-        {guessRounds.map((guessRound) => (
-          <Text key={guessRound}>{guessRound}</Text>
-        ))}
+        <FlatList
+          data={guessRounds}
+          renderItem={(itemData) => <Text>{itemData.item}</Text>}
+          keyExtractor={(item) => item.toString()}
+        />
       </View>
     </View>
   );
