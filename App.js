@@ -39,7 +39,8 @@ export default function App() {
     return null;
   }
 
-  const gameOverHandler = () => {
+  const gameOverHandler = (numberOfRounds) => {
+    setRoundsNumber(numberOfRounds);
     setGameIsOver(true);
   };
 
@@ -65,11 +66,7 @@ export default function App() {
     }
     if (userNumber) {
       return (
-        <GameScreen
-          userNumber={userNumber}
-          onGameOver={gameOverHandler}
-          setRoundsNumber={setRoundsNumber}
-        />
+        <GameScreen userNumber={userNumber} onGameOver={gameOverHandler} />
       );
     }
     return <GameStartScreen onPickNumber={pickedNumberHandler} />;

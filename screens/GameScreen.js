@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
+import { Alert, FlatList, StyleSheet, View } from "react-native";
+import GuessLogItem from "../components//game/GuessLogItem";
 import NumberContainer from "../components/game/NumberContainer";
 import Card from "../components/ui/Card";
 import PrimaryButton from "../components/ui/PrimaryButton";
@@ -19,7 +20,7 @@ const generateRandomBetween = (min, max, exclude) => {
 let minBoundary = 1;
 let maxBoundary = 100;
 
-const GameScreen = ({ userNumber, onGameOver, setRoundsNumber }) => {
+const GameScreen = ({ userNumber, onGameOver }) => {
   const [currentGuess, setCurrentGuess] = useState(
     generateRandomBetween(minBoundary, maxBoundary, userNumber)
   );
@@ -48,11 +49,12 @@ const GameScreen = ({ userNumber, onGameOver, setRoundsNumber }) => {
       maxBoundary = currentGuess - 1;
     }
     const newGuess = generateRandomBetween(minBoundary, maxBoundary);
-    setRoundsNumber((prevRounds) => prevRounds + 1);
     setCurrentGuess(newGuess);
     setGuessRounds((prevGuessRounds) => [newGuess, ...prevGuessRounds]);
     if (newGuess === userNumber) {
-      onGameOver();
+      minBoundary = 1;
+      maxBoundary = 100;
+      onGameOver(guessRounds.length + 1);
     }
   };
 
@@ -74,10 +76,15 @@ const GameScreen = ({ userNumber, onGameOver, setRoundsNumber }) => {
           </View>
         </View>
       </Card>
-      <View>
+      <View style={styles.listContainer}>
         <FlatList
           data={guessRounds}
-          renderItem={(itemData) => <Text>{itemData.item}</Text>}
+          renderItem={(itemData) => (
+            <GuessLogItem
+              roundNumber={guessRounds.length - itemData.index}
+              guess={itemData.item}
+            />
+          )}
           keyExtractor={(item) => item.toString()}
         />
       </View>
@@ -100,5 +107,9 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 1,
+  },
+  listContainer: {
+    flex: 1,
+    padding: 16,
   },
 });
