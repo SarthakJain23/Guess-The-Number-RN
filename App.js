@@ -10,6 +10,7 @@ import GameScreen from "./screens/GameScreen";
 import GameStartScreen from "./screens/GameStartScreen";
 
 export default function App() {
+  const [roundsNumber, setRoundsNumber] = useState(0);
   const [userNumber, setUserNumber] = useState(null);
   const [gameIsOver, setGameIsOver] = useState(true);
   const [appIsReady, setAppIsReady] = useState(false);
@@ -47,13 +48,28 @@ export default function App() {
     setGameIsOver(false);
   };
 
+  const onStartNewGame = () => {
+    setUserNumber(null);
+    setRoundsNumber(0);
+  };
+
   const renderScreen = () => {
     if (gameIsOver && userNumber) {
-      return <GameOverScreen />;
+      return (
+        <GameOverScreen
+          roundsNumber={roundsNumber}
+          userNumber={userNumber}
+          onStartNewGame={onStartNewGame}
+        />
+      );
     }
     if (userNumber) {
       return (
-        <GameScreen userNumber={userNumber} onGameOver={gameOverHandler} />
+        <GameScreen
+          userNumber={userNumber}
+          onGameOver={gameOverHandler}
+          setRoundsNumber={setRoundsNumber}
+        />
       );
     }
     return <GameStartScreen onPickNumber={pickedNumberHandler} />;

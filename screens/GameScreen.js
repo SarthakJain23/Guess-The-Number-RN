@@ -19,12 +19,13 @@ const generateRandomBetween = (min, max, exclude) => {
 let minBoundary = 1;
 let maxBoundary = 100;
 
-const GameScreen = ({ userNumber, onGameOver }) => {
+const GameScreen = ({ userNumber, onGameOver, setRoundsNumber }) => {
   const [currentGuess, setCurrentGuess] = useState(
     generateRandomBetween(minBoundary, maxBoundary, userNumber)
   );
+  const [guessRounds, setGuessRounds] = useState([currentGuess]);
 
-  const nextGuessHandler = (increment) => {
+  const validateGuess = (increment) => {
     if (
       (increment && currentGuess >= userNumber) ||
       (!increment && currentGuess <= userNumber)
@@ -34,13 +35,21 @@ const GameScreen = ({ userNumber, onGameOver }) => {
       ]);
       return;
     }
+  };
+
+  const nextGuessHandler = (increment) => {
+    if (validateGuess(increment)) {
+      return;
+    }
     if (increment) {
       minBoundary = currentGuess + 1;
     } else {
       maxBoundary = currentGuess - 1;
     }
     const newGuess = generateRandomBetween(minBoundary, maxBoundary);
+    setRoundsNumber((prevRounds) => prevRounds + 1);
     setCurrentGuess(newGuess);
+    setGuessRounds((prevGuessRounds) => [...prevGuessRounds, newGuess]);
     if (newGuess === userNumber) {
       onGameOver();
     }
@@ -64,6 +73,11 @@ const GameScreen = ({ userNumber, onGameOver }) => {
           </View>
         </View>
       </Card>
+      <View>
+        {guessRounds.map((guessRound) => (
+          <Text key={guessRound}>{guessRound}</Text>
+        ))}
+      </View>
     </View>
   );
 };
