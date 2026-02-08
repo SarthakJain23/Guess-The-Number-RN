@@ -1,12 +1,12 @@
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
 import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { ImageBackground, StyleSheet } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "./constants/colors";
 import GameOverScreen from "./screens/GameOverScreen";
-import GameScreen from "./screens/GameScreen";
 import GameStartScreen from "./screens/GameStartScreen";
 
 export default function App() {
@@ -66,7 +66,7 @@ export default function App() {
     }
     if (userNumber) {
       return (
-        <GameScreen userNumber={userNumber} onGameOver={gameOverHandler} />
+        <GameScr een userNumber={userNumber} onGameOver={gameOverHandler} />
       );
     }
     return <GameStartScreen onPickNumber={pickedNumberHandler} />;
@@ -74,6 +74,7 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
+      <StatusBar style="light" />
       <LinearGradient
         colors={[COLORS.primary700, COLORS.accent500]}
         style={styles.rootScreen}
